@@ -26,7 +26,9 @@ namespace ShipIt.Controllers
         {
             Log.Info($"Looking up employee by name: {name}");
 
-            var employee = new Employee(_employeeRepository.GetEmployeeByName(name));
+            var employees = _employeeRepository
+                .GetEmployeeByName(name)
+                .Select(employees => new Employee(e));
 
             Log.Info("Found employee: " + employee);
             return new EmployeeResponse(employee);

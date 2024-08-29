@@ -1,11 +1,14 @@
 ﻿﻿using System;
 using System.Data;
+using System.Runtime.CompilerServices;
 using ShipIt.Models.ApiModels;
 
 namespace ShipIt.Models.DataModels
 {
     public class EmployeeDataModel : DataModel
     {
+        [DatabaseColumnName("employee_id")]
+        public int EmployeeId { get; set; }
         [DatabaseColumnName("name")]
         public string Name { get; set; }
         [DatabaseColumnName("w_id")]

@@ -98,10 +98,30 @@ namespace ShipItTest
 
             var response = employeeController.Post(addEmployeesRequest);
             var databaseEmployee = employeeRepository.GetEmployeeByName(NAME);
-            var correctDatabaseEmploye = employeeBuilder.CreateEmployee();
+            var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
 
             Assert.IsTrue(response.Success);
-            Assert.IsTrue(EmployeesAreEqual(new Employee(databaseEmployee), correctDatabaseEmploye));
+            Assert.IsTrue(EmployeesAreEqual(new Employee(databaseEmployee), correctDatabaseEmployee));
+        }
+
+                [Test]
+        public void TestAddTwoEmployees()
+        {
+            onSetUp();
+            var employeeBuilder = new EmployeeBuilder().setName(NAME);
+            var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
+            var employeeBuilder2 = new EmployeeBuilder().setName(NAME);
+            employeeBuilder2.setRole(EmployeeRole.PICKER);
+            var addEmployeesRequest2 = employeeBuilder2.CreateAddEmployeesRequest();
+
+            var response = employeeController.Post(addEmployeesRequest);
+            var response2 = employeeController.Post(addEmployeesRequest2);
+            var databaseEmployee = employeeRepository.GetEmployeeByName(NAME);
+            Console.WriteLine($"***** {databaseEmployee.Name},{databaseEmployee.Role}");
+            var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
+
+            Assert.IsFalse(response.Success);
+            Assert.IsTrue(EmployeesAreEqual(new Employee(databaseEmployee), correctDatabaseEmployee));
         }
 
         [Test]
