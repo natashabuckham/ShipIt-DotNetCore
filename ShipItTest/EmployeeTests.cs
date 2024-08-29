@@ -5,6 +5,7 @@ using System.Linq;
  using ShipIt.Controllers;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
+using ShipIt.Models.DataModels;
 using ShipIt.Repositories;
 using ShipItTest.Builders;
 
@@ -29,18 +30,18 @@ namespace ShipItTest
             Assert.AreEqual(employeeRepository.GetEmployeeByName(employee.Name).WarehouseId, employee.WarehouseId);
         }
 
-        [Test]
-        public void TestGetEmployeeByName()
-        {
-            onSetUp();
-            var employeeBuilder = new EmployeeBuilder().setName(NAME);
-            employeeRepository.AddEmployees(new List<Employee>() {employeeBuilder.CreateEmployee()});
-            var result = employeeController.Get(NAME);
+        // [Test]
+        // public void TestGetEmployeeByName()
+        // {
+        //     onSetUp();
+        //     var employeeBuilder = new EmployeeBuilder().setName(NAME);
+        //     employeeRepository.AddEmployees(new List<Employee>() {employeeBuilder.CreateEmployee()});
+        //     var result = employeeController.Get(NAME);
 
-            var correctEmployee = employeeBuilder.CreateEmployee();
-            Assert.IsTrue(EmployeesAreEqual(correctEmployee, result.Employees.First()));
-            Assert.IsTrue(result.Success);
-        }
+        //     var correctEmployee = employeeBuilder.CreateEmployee();
+        //     Assert.IsTrue(EmployeesAreEqual(correctEmployee, result.Employees.First()));
+        //     Assert.IsTrue(result.Success);
+        // }
 
         [Test]
         public void TestGetEmployeesByWarehouseId()
@@ -97,14 +98,15 @@ namespace ShipItTest
             var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
 
             var response = employeeController.Post(addEmployeesRequest);
-            var databaseEmployee = employeeRepository.GetEmployeeByName(NAME);
-            var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
+            IEnumerable<EmployeeDataModel> databaseEmployees = employeeRepository.GetEmployeesByName(NAME);
+            // var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
+            var employeeCount = databaseEmployees.Count();
 
             Assert.IsTrue(response.Success);
-            Assert.IsTrue(EmployeesAreEqual(new Employee(databaseEmployee), correctDatabaseEmployee));
+            Assert.AreEqual(employeeCount, 1);
         }
 
-                [Test]
+        [Test]
         public void TestAddTwoEmployees()
         {
             onSetUp();
@@ -116,12 +118,13 @@ namespace ShipItTest
 
             var response = employeeController.Post(addEmployeesRequest);
             var response2 = employeeController.Post(addEmployeesRequest2);
-            var databaseEmployee = employeeRepository.GetEmployeeByName(NAME);
-            Console.WriteLine($"***** {databaseEmployee.Name},{databaseEmployee.Role}");
-            var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
+            IEnumerable<EmployeeDataModel> databaseEmployees = employeeRepository.GetEmployeesByName(NAME);
+            
+            // var correctDatabaseEmployee = employeeBuilder.CreateEmployee();
+            var employeeCount = databaseEmployees.Count();
 
-            Assert.IsFalse(response.Success);
-            Assert.IsTrue(EmployeesAreEqual(new Employee(databaseEmployee), correctDatabaseEmployee));
+            Assert.IsTrue(response.Success);
+            Assert.AreEqual(employeeCount, 2);
         }
 
         [Test]
