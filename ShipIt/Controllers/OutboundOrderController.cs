@@ -56,7 +56,7 @@ namespace ShipIt.Controllers
                     var product = products[orderLine.gtin];
                     lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
                     productIds.Add(product.Id);
-                    totalWeight += product.Weight;
+                    totalWeight += product.Weight * orderLine.quantity;
                 }
             }
 
@@ -97,7 +97,7 @@ namespace ShipIt.Controllers
 
             _stockRepository.RemoveStock(request.WarehouseId, lineItems);
             
-            int trucksNeeded = Convert.ToInt32(totalWeight/2000);
+            int trucksNeeded = (int)Math.Ceiling(totalWeight/2000);
 
             return trucksNeeded;
         }

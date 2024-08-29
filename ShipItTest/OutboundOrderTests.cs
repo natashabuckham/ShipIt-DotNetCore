@@ -77,15 +77,14 @@ namespace ShipItTest
                     new OrderLine()
                     {
                         gtin = GTIN,
-                        quantity = 1
+                        quantity = 8
                     }
                 }
             };
 
             int trucksRequired = outboundOrderController.Post(outboundOrder);
 
-            // var stock = stockRepository.GetStockByWarehouseAndProductIds(WAREHOUSE_ID, new List<int>() { productId })[productId];
-            Assert.AreEqual(16, trucksRequired);
+            Assert.AreEqual(2, trucksRequired);
         }
 
         [Test]
