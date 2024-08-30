@@ -30,7 +30,7 @@ namespace ShipIt.Controllers
                 .GetEmployeesByName(name)
                 .Select(e => new Employee(e));
 
-            Log.Info(String.Format("Found employees with name: {name}", employees));
+            Log.Info(String.Format("Found employees:", employees));
             return employees.Select(employees => new EmployeeResponse(employees)).ToList();
         }
 
