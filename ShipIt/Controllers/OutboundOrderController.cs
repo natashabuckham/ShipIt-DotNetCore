@@ -42,6 +42,7 @@ namespace ShipIt.Controllers
 
             var lineItems = new List<StockAlteration>();
             var productIds = new List<int>();
+            // Dictionary<int, float> productsAndWeights
             var errors = new List<string>();
             float totalWeight = 0;
 
@@ -54,7 +55,7 @@ namespace ShipIt.Controllers
                 else
                 {
                     var product = products[orderLine.gtin];
-                    lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
+                    lineItems.Add(new StockAlteration(product.Id, orderLine.quantity, product.Weight * orderLine.quantity));
                     productIds.Add(product.Id);
                     totalWeight += product.Weight * orderLine.quantity;
                 }
