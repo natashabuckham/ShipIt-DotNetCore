@@ -1,8 +1,8 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
- using Microsoft.AspNetCore.Mvc;
- using ShipIt.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Repositories;
 
@@ -42,7 +42,6 @@ namespace ShipIt.Controllers
 
             var lineItems = new List<StockAlteration>();
             var productIds = new List<int>();
-            // Dictionary<int, float> productsAndWeights
             var errors = new List<string>();
             float totalWeight = 0;
 
@@ -79,15 +78,22 @@ namespace ShipIt.Controllers
                 if (!stock.ContainsKey(lineItem.ProductId))
                 {
                     errors.Add(string.Format("Product: {0}, no stock held", orderLine.gtin));
-                    continue;
+                    break;
                 }
-
-                var item = stock[lineItem.ProductId];
-                if (lineItem.Quantity > item.held)
+                else
                 {
-                    errors.Add(
-                        string.Format("Product: {0}, stock held: {1}, stock to remove: {2}", orderLine.gtin, item.held,
-                            lineItem.Quantity));
+
+                    var item = stock[lineItem.ProductId];
+                    if (lineItem.Quantity > item.held)
+                    {
+                        errors.Add(
+                            string.Format("Product: {0}, stock held: {1}, stock to remove: {2}", orderLine.gtin, item.held,
+                                lineItem.Quantity));
+                    }
+                    else
+                    {
+                        // calculate the number of trucks for each line item
+                    }
                 }
             }
 
@@ -97,8 +103,8 @@ namespace ShipIt.Controllers
             }
 
             _stockRepository.RemoveStock(request.WarehouseId, lineItems);
-            
-            int trucksNeeded = (int)Math.Ceiling(totalWeight/2000);
+
+            int trucksNeeded = (int)Math.Ceiling(totalWeight / 2000);
 
             return trucksNeeded;
         }
