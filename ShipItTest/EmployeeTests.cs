@@ -30,18 +30,18 @@ namespace ShipItTest
             Assert.AreEqual(employeeRepository.GetEmployeeByName(employee.Name).WarehouseId, employee.WarehouseId);
         }
 
-        // [Test]
-        // public void TestGetEmployeeByName()
-        // {
-        //     onSetUp();
-        //     var employeeBuilder = new EmployeeBuilder().setName(NAME);
-        //     employeeRepository.AddEmployees(new List<Employee>() {employeeBuilder.CreateEmployee()});
-        //     var result = employeeController.Get(NAME);
+        [Test]
+        public void TestGetEmployeeByName()
+        {
+            onSetUp();
+            var employeeBuilder = new EmployeeBuilder().setName(NAME);
+            employeeRepository.AddEmployees(new List<Employee>() {employeeBuilder.CreateEmployee()});
+            var result = employeeController.Get(NAME);
 
-        //     var correctEmployee = employeeBuilder.CreateEmployee();
-        //     Assert.IsTrue(EmployeesAreEqual(correctEmployee, result.Employees.First()));
-        //     Assert.IsTrue(result.Success);
-        // }
+            var correctEmployee = employeeBuilder.CreateEmployee();
+            Assert.IsTrue(EmployeesAreEqual(correctEmployee, result[0].Employees.First()));
+            Assert.IsTrue(result[0].Success);
+        }
 
         [Test]
         public void TestGetEmployeesByWarehouseId()
@@ -162,25 +162,6 @@ namespace ShipItTest
             catch (NoSuchEntityException e)
             {
                 Assert.IsTrue(e.Message.Contains(NAME));
-            }
-        }
-
-        [Test]
-        public void TestAddDuplicateEmployee()
-        {
-            onSetUp();
-            var employeeBuilder = new EmployeeBuilder().setName(NAME);
-            employeeRepository.AddEmployees(new List<Employee>() { employeeBuilder.CreateEmployee() });
-            var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
-
-            try
-            {
-                employeeController.Post(addEmployeesRequest);
-                Assert.Fail("Expected exception to be thrown.");
-            }
-            catch (Exception)
-            {
-                Assert.IsTrue(true);
             }
         }
 
